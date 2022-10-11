@@ -9,9 +9,18 @@ export class Result<V, E> {
         this._error = error;
     }
 
-    map<V2>(fn: (item: V) => Maybe<V2>): Result<V2, E> {
-        if(this._value.isSome()) {
+    map<V2>(fn: (item: V) => Maybe<V2>) : Result<V2, E> {
+        if (this._value.isSome()) {
             const result = this._value.flatMap(fn);
+            return new Result<V2, E>(result, Maybe.none());
+        } else {
+            return new Result<V2, E>(Maybe.none(), this._error);
+        }
+    }
+
+    async mapAsync<V2>(fn: (item: V) => Promise<Maybe<V2>>): Promise<Result<V2, E>> {
+        if (this._value.isSome()) {
+            const result = await this._value.flatMapAsync(fn);
             return new Result<V2, E>(result, Maybe.none());
         } else {
             return new Result<V2, E>(Maybe.none(), this._error);
@@ -27,8 +36,17 @@ export class Result<V, E> {
         }
     }
 
+    async mapErrorAsync<E2>(errFn: (err: E) => Promise<Maybe<E2>>): Promise<Result<V, E2>> {
+        if (this._error.isSome()) {
+            const result = await this._error.flatMapAsync<E2>(errFn);
+            return new Result(Maybe.none<V>(), result);
+        } else {
+            return new Result(this._value, Maybe.none());
+        }
+    }
+
     unwrap() {
-        if(this._error.isSome()) {
+        if (this._error.isSome()) {
             throw this._error.unwrap();
         } else {
             return this._value.unwrap();

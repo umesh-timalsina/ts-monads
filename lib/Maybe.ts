@@ -11,10 +11,10 @@ export class Maybe<T> {
     }
 
     static none<T>() {
-        return new Maybe<T>(null)
+        return new Maybe<T>(null);
     }
 
-    static fromValue<T>(value: T | null): Maybe<T>{
+    static fromValue<T>(value: T | null): Maybe<T> {
         return value ? Maybe.some(value) : Maybe.none<T>();
     }
 
@@ -30,12 +30,20 @@ export class Maybe<T> {
         }
     }
 
+    async flatMapAsync<R>(f: (wrapped: T) => Promise<Maybe<R>>): Promise<Maybe<R>> {
+        if (this.value === null) {
+            return Maybe.none();
+        } else {
+            return await f(this.value);
+        }
+    }
+
     public isSome(): boolean {
-        return !this.isNone()
+        return !this.isNone();
     }
 
     public isNone(): boolean {
-        return this.value === null || this.value === undefined
+        return this.value === null || this.value === undefined;
     }
 
     unwrap(): T | null {
@@ -43,7 +51,7 @@ export class Maybe<T> {
     }
 
     valueOrThrow(err: Error) {
-        if(this.isNone()) {
+        if (this.isNone()) {
             throw err;
         } else {
             return this.unwrap();

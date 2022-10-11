@@ -3,7 +3,7 @@
 
 import expect from 'expect';
 import {Result} from '../lib/Result';
-import {Maybe} from "../lib/Maybe";
+import {Maybe} from '../lib/Maybe';
 
 describe('Result', function () {
     it('should create result object with success value', () => {
@@ -53,5 +53,32 @@ describe('Result', function () {
         });
     });
 
+    it('should map on with async functions', async () => {
+        const result = Result.Ok('custom error message');
 
+        const value = await result.mapAsync(async value => {
+            return Maybe.some({
+                statusCode: 200,
+                message: value
+            });
+        });
+
+        expect(value.unwrap()).toEqual({
+            statusCode: 200,
+            message: 'custom error message'
+        });
+    });
+
+    it('should map on error with async functions', async () => {
+        const result = Result.Error(new Error('custom error message'));
+
+        const errObj = await result.mapErrorAsync(async err => {
+            return Maybe.some({
+                statusCode: 400,
+                message: err.message
+            });
+        });
+
+        expect(() => errObj.unwrap()).toThrowError('');
+    });
 });
