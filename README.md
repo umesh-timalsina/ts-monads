@@ -1,7 +1,7 @@
 [![CI](https://github.com/umesh-timalsina/ts-monads/actions/workflows/CI.yml/badge.svg)](https://github.com/umesh-timalsina/ts-monads/actions/workflows/CI.yml)
 # ts-monads
 
-Playing with `monads` in typescript. 
+Playing with [`monads`](https://en.wikipedia.org/wiki/Monad_(functional_programming)) in typescript. 
 
 ## Current Implementations
 
