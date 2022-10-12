@@ -47,10 +47,16 @@ describe('Result', function () {
             });
         });
 
+        const error = result.map(value => {
+            throw new Error(value);
+        });
+
         expect(value.unwrap()).toEqual({
             statusCode: 200,
             message: 'custom error message'
         });
+
+        expect(() => error.unwrap()).toThrowError();
     });
 
     it('should map on with async functions', async () => {
@@ -63,10 +69,16 @@ describe('Result', function () {
             });
         });
 
+        const error = await result.mapAsync(async value => {
+            throw new Error(value);
+        });
+
         expect(value.unwrap()).toEqual({
             statusCode: 200,
             message: 'custom error message'
         });
+
+        expect(() => error.unwrap()).toThrowError();
     });
 
     it('should map on error with async functions', async () => {

@@ -37,7 +37,7 @@ describe('Maybe', function () {
     });
 
     it('should return default value for getorelse', () => {
-        const none = Maybe.fromValue(null);
+        const none = Maybe.fromValue<number>(null);
         const five = none.getOrElse(5);
         expect(five).toEqual(5);
     });

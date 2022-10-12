@@ -9,10 +9,14 @@ export class Result<V, E> {
         this._error = error;
     }
 
-    map<V2>(fn: (item: V) => Maybe<V2>) : Result<V2, E> {
+    map<V2>(fn: (item: V) => Maybe<V2>): Result<V2, E> {
         if (this._value.isSome()) {
-            const result = this._value.flatMap(fn);
-            return new Result<V2, E>(result, Maybe.none());
+            try {
+                const result = this._value.flatMap(fn);
+                return new Result<V2, E>(result, Maybe.none());
+            } catch (err) {
+                return new Result<V2, E>(Maybe.none(), Maybe.some(err as E));
+            }
         } else {
             return new Result<V2, E>(Maybe.none(), this._error);
         }
@@ -20,26 +24,40 @@ export class Result<V, E> {
 
     async mapAsync<V2>(fn: (item: V) => Promise<Maybe<V2>>): Promise<Result<V2, E>> {
         if (this._value.isSome()) {
-            const result = await this._value.flatMapAsync(fn);
-            return new Result<V2, E>(result, Maybe.none());
+            try {
+                const result = await this._value.flatMapAsync(fn);
+                return new Result<V2, E>(result, Maybe.none());
+            } catch (err) {
+                return new Result<V2, E>(Maybe.none(), Maybe.some(err as E));
+            }
+
         } else {
             return new Result<V2, E>(Maybe.none(), this._error);
         }
     }
 
-    mapError<E2>(errFn: (err: E) => Maybe<E2>): Result<V, E2> {
+    mapError<E2>(errFn: (err: E) => Maybe<E2>): Result<V, E2 | E> {
         if (this._error.isSome()) {
-            const result = this._error.flatMap<E2>(errFn);
-            return new Result(Maybe.none<V>(), result);
+            try {
+                const result = this._error.flatMap<E2>(errFn);
+                return new Result(Maybe.none<V>(), result);
+            } catch (err) {
+                return Result.Error(err as E);
+            }
+
         } else {
             return new Result(this._value, Maybe.none());
         }
     }
 
-    async mapErrorAsync<E2>(errFn: (err: E) => Promise<Maybe<E2>>): Promise<Result<V, E2>> {
+    async mapErrorAsync<E2>(errFn: (err: E) => Promise<Maybe<E2>>): Promise<Result<V, E2 | E>> {
         if (this._error.isSome()) {
-            const result = await this._error.flatMapAsync<E2>(errFn);
-            return new Result(Maybe.none<V>(), result);
+            try {
+                const result = await this._error.flatMapAsync<E2>(errFn);
+                return new Result(Maybe.none<V>(), result);
+            } catch (err) {
+                return new Result<V, E>(Maybe.none(), Maybe.some(err as E));
+            }
         } else {
             return new Result(this._value, Maybe.none());
         }
