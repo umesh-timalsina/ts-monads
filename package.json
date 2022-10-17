@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts",
+    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts tests/*.spec.ts",
     "prepublishOnly": "npm run build",
     "build": "vite -c vite.config.js build"
   },

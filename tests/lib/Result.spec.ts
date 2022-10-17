@@ -2,8 +2,8 @@
 
 
 import expect from 'expect';
-import {Ok, Err} from '../lib/Result';
-import {Maybe} from '../lib/Maybe';
+import {Ok, Err} from '../../lib/Result';
+import {Maybe} from '../../lib/Maybe';
 
 describe('Result', function () {
     it('should create result object with success value', () => {
