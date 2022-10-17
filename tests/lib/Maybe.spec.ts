@@ -2,7 +2,7 @@
 
 
 import expect from 'expect';
-import {Maybe} from '../lib/Maybe';
+import {Maybe} from '../../lib/Maybe';
 
 
 describe('Maybe', function () {
