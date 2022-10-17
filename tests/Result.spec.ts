@@ -2,95 +2,84 @@
 
 
 import expect from 'expect';
-import {Result} from '../lib/Result';
+import {Ok, Err} from '../lib/Result';
 import {Maybe} from '../lib/Maybe';
 
 describe('Result', function () {
     it('should create result object with success value', () => {
-        const result = Result.Ok('My String');
-        expect(result._value.isSome()).toBe(true);
-        expect(result._error.isSome()).toBe(false);
+        const result = new Ok('My String');
+        expect(result.unwrap()).toBe('My String');
+    });
+
+    it('should create result object with no value', () => {
+        const result = new Ok();
+        expect(result.unwrap()).toBe(undefined);
     });
 
     it('should create result object with error value', () => {
-        const result = Result.Error(new Error('custom error message'));
-        expect(result._value.isSome()).toBe(false);
-        expect(result._error.isSome()).toBe(true);
-    });
-
-    it('should create result object with error value', () => {
-        const result = Result.Error(new Error('custom error message'));
-        expect(result._value.isSome()).toBe(false);
-        expect(result._error.isSome()).toBe(true);
+        const result = new Err(new Error('custom error message'));
+        expect(() => result.unwrap()).toThrow();
     });
 
     it('should map error', () => {
-        const result = Result.Error(new Error('custom error message'));
+        const result = new Err(new Error('custom error message'));
 
-        const errObj = result.mapError(err => {
-            return Maybe.some({
-                statusCode: 400,
-                message: err.message
-            });
-        });
+        const errObj = result.mapError(err => new Error('Some new error'));
 
-        expect(() => errObj.unwrap()).toThrowError('');
+        expect(() => errObj.unwrap()).toThrowError('Some new error');
     });
 
     it('should map value', () => {
-        const result = Result.Ok('custom error message');
+        const result = new Ok('custom error message');
 
-        const value = result.map(value => {
-            return Maybe.some({
+        const value = result.map(value => (
+            {
                 statusCode: 200,
                 message: value
-            });
-        });
-
-        const error = result.map(value => {
-            throw new Error(value);
-        });
+            })
+        );
 
         expect(value.unwrap()).toEqual({
             statusCode: 200,
             message: 'custom error message'
+        });
+
+    });
+
+    it('should return Err if map throws error', () => {
+        const result = new Ok();
+        const error = result.map(value => {
+            throw new Error(value);
         });
 
         expect(() => error.unwrap()).toThrowError();
     });
 
     it('should map on with async functions', async () => {
-        const result = Result.Ok('custom error message');
+        const result = new Ok();
+        const value = await result.mapAsync(async value => 10);
 
-        const value = await result.mapAsync(async value => {
-            return Maybe.some({
-                statusCode: 200,
-                message: value
-            });
-        });
+        expect(value.unwrap()).toEqual(10);
+    });
 
+    it('should return Err if mapAsync rejects', async () => {
+        const result = new Ok();
         const error = await result.mapAsync(async value => {
             throw new Error(value);
         });
-
-        expect(value.unwrap()).toEqual({
-            statusCode: 200,
-            message: 'custom error message'
-        });
-
         expect(() => error.unwrap()).toThrowError();
     });
 
     it('should map on error with async functions', async () => {
-        const result = Result.Error(new Error('custom error message'));
+        const result = new Err();
+        const errObj = await result.mapErrorAsync(async err => new Error('some error'));
 
-        const errObj = await result.mapErrorAsync(async err => {
-            return Maybe.some({
-                statusCode: 400,
-                message: err.message
-            });
-        });
+        expect(() => errObj.unwrap()).toThrowError('some error');
+    });
 
-        expect(() => errObj.unwrap()).toThrowError('');
+    it('should no-op on mapErrorAsync w/ Ok value', async () => {
+        const result = new Ok();
+        const errObj = await result.mapErrorAsync(async err => new Error('some error'));
+        expect(() => errObj.unwrap()).not.toThrowError('some error');
     });
 });
