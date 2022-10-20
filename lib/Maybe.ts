@@ -131,7 +131,7 @@ export class None<T> implements Maybe<T> {
     }
 
     unwrap(): T {
-        throw new Err('cannot unwrap a none');
+        throw new Error('cannot unwrap a none');
     }
 
     unwrapOr(defaultValue: T): T {
