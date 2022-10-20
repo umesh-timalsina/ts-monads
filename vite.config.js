@@ -1,5 +1,5 @@
-import {defineConfig} from 'vite';
-import {resolve} from 'path';
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
             name: 'monads',
         },
         sourcemap: true,
-        outDir: 'dist'
+        outDir: 'dist',
     },
-    plugins: [dts()]
+    plugins: [dts()],
 });

@@ -1,12 +1,9 @@
 /* eslint-env mocha */
 
-
 import expect from 'expect';
-import {Maybe} from '../../lib/Maybe';
-
+import { Maybe } from '../../lib/Maybe';
 
 describe('Maybe', function () {
-
     it('should create none type for maybe', () => {
         const noneString = Maybe.none<string>();
         expect(noneString.isNone()).toEqual(true);
@@ -15,17 +12,18 @@ describe('Maybe', function () {
     it('should throw error if value missing', () => {
         const maybeNone = Maybe.none();
         expect(() => {
-            maybeNone.valueOrThrow(new Error('value is required'))
+            maybeNone.valueOrThrow(new Error('value is required'));
         }).toThrowError('');
 
         const maybeSome = Maybe.some('Some Value');
         expect(maybeSome.valueOrThrow(new Error())).toEqual('Some Value');
-
     });
 
     it('should map if value present', () => {
         const value = Maybe.some<string>('My String');
-        const upperCase = value.flatMap(value => Maybe.some(value.toUpperCase()));
+        const upperCase = value.flatMap((value) =>
+            Maybe.some(value.toUpperCase())
+        );
         expect(upperCase.unwrap()).toEqual('MY STRING');
     });
 
@@ -41,5 +39,4 @@ describe('Maybe', function () {
         const five = none.getOrElse(5);
         expect(five).toEqual(5);
     });
-
 });

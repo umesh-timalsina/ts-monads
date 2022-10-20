@@ -1,9 +1,8 @@
 /* eslint-env mocha */
 
-
 import expect from 'expect';
-import {Ok, Err} from '../../lib/Result';
-import {Maybe} from '../../lib/Maybe';
+import { Ok, Err } from '../../lib/Result';
+import { Maybe } from '../../lib/Maybe';
 
 describe('Result', function () {
     it('should create result object with success value', () => {
@@ -24,7 +23,7 @@ describe('Result', function () {
     it('should map error', () => {
         const result = new Err(new Error('custom error message'));
 
-        const errObj = result.mapError(err => new Error('Some new error'));
+        const errObj = result.mapError((err) => new Error('Some new error'));
 
         expect(() => errObj.unwrap()).toThrowError('Some new error');
     });
@@ -32,23 +31,20 @@ describe('Result', function () {
     it('should map value', () => {
         const result = new Ok('custom error message');
 
-        const value = result.map(value => (
-            {
-                statusCode: 200,
-                message: value
-            })
-        );
+        const value = result.map((value) => ({
+            statusCode: 200,
+            message: value,
+        }));
 
         expect(value.unwrap()).toEqual({
             statusCode: 200,
-            message: 'custom error message'
+            message: 'custom error message',
         });
-
     });
 
     it('should return Err if map throws error', () => {
         const result = new Ok();
-        const error = result.map(value => {
+        const error = result.map((value) => {
             throw new Error(value);
         });
 
@@ -57,14 +53,14 @@ describe('Result', function () {
 
     it('should map on with async functions', async () => {
         const result = new Ok();
-        const value = await result.mapAsync(async value => 10);
+        const value = await result.mapAsync(async (value) => 10);
 
         expect(value.unwrap()).toEqual(10);
     });
 
     it('should return Err if mapAsync rejects', async () => {
         const result = new Ok();
-        const error = await result.mapAsync(async value => {
+        const error = await result.mapAsync(async (value) => {
             throw new Error(value);
         });
         expect(() => error.unwrap()).toThrowError();
@@ -72,14 +68,18 @@ describe('Result', function () {
 
     it('should map on error with async functions', async () => {
         const result = new Err();
-        const errObj = await result.mapErrorAsync(async err => new Error('some error'));
+        const errObj = await result.mapErrorAsync(
+            async (err) => new Error('some error')
+        );
 
         expect(() => errObj.unwrap()).toThrowError('some error');
     });
 
     it('should no-op on mapErrorAsync w/ Ok value', async () => {
         const result = new Ok();
-        const errObj = await result.mapErrorAsync(async err => new Error('some error'));
+        const errObj = await result.mapErrorAsync(
+            async (err) => new Error('some error')
+        );
         expect(() => errObj.unwrap()).not.toThrowError('some error');
     });
 });

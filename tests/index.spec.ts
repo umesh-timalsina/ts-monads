@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 
-import {Maybe, Ok, Err} from '../index';
-import {Maybe as MaybeFromModule} from '../lib/Maybe';
-import {Ok as OkFromModule, Err as ErrFromModule} from '../lib/Result';
+import { Maybe, Ok, Err } from '../index';
+import { Maybe as MaybeFromModule } from '../lib/Maybe';
+import { Ok as OkFromModule, Err as ErrFromModule } from '../lib/Result';
 
 import expect from 'expect';
 

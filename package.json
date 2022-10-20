@@ -12,7 +12,8 @@
     "test": "npm run typecheck && npm run test:unit",
     "prepublishOnly": "npm run build",
     "build": "vite -c vite.config.js build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prettier": "prettier --write **/*.{js,ts} --ignore-path ./.gitignore"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "@types/node": "^18.8.4",
     "expect": "^29.1.2",
     "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
     "ts-mocha": "^10.0.0",
     "typescript": "^4.8.4",
     "vite": "^3.1.7",
