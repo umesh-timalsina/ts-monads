@@ -37,7 +37,7 @@ export class Some<T> implements Maybe<T> {
         return this.value;
     }
 
-     unwrapOrElse<T>(fn: () => T) {
+     unwrapOrElse<T>(fn: () => T): T {
         return this.value;
      }
 
