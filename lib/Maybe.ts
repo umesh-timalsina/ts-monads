@@ -5,7 +5,7 @@ export class Maybe<T> {
 
     static some<T>(value: T) {
         if (!value) {
-            throw Error("Provided value must not be empty");
+            throw Error('Provided value must not be empty');
         }
         return new Maybe(value);
     }
@@ -30,7 +30,9 @@ export class Maybe<T> {
         }
     }
 
-    async flatMapAsync<R>(f: (wrapped: T) => Promise<Maybe<R>>): Promise<Maybe<R>> {
+    async flatMapAsync<R>(
+        f: (wrapped: T) => Promise<Maybe<R>>
+    ): Promise<Maybe<R>> {
         if (this.value === null) {
             return Maybe.none();
         } else {

@@ -1,11 +1,11 @@
-import {Maybe} from './Maybe';
+import { Maybe } from './Maybe';
 
 export interface Result<V, E> {
     map<V2>(fn: (item: V) => V2): Result<V2, E>;
     mapError<E2>(errFn: (err: E) => E2): Result<V, E2>;
-    async mapAsync<V2>(fn: (item: V) => Promise<V2>): Promise<Result<V2, E>>;
-    async mapErrorAsync<E2>(errFn: (item: E) => Promise<E2>): Promise<Result<V, E2>>;
-    unwrap() : V;
+    mapAsync<V2>(fn: (item: V) => Promise<V2>): Promise<Result<V2, E>>;
+    mapErrorAsync<E2>(errFn: (item: E) => Promise<E2>): Promise<Result<V, E2>>;
+    unwrap(): V;
     ok(): Maybe<V>;
 }
 
@@ -37,7 +37,9 @@ export class Ok<V> implements Result<V> {
         }
     }
 
-    async mapErrorAsync<E2>(errFn: (item: E) => Promise<E2>): Promise<Result<V, E2>> {
+    async mapErrorAsync<E2>(
+        errFn: (item: E) => Promise<E2>
+    ): Promise<Result<V, E2>> {
         return this;
     }
 
@@ -69,7 +71,9 @@ export class Err<E> implements Result<V, E> {
         return this;
     }
 
-    async mapErrorAsync<E2>(errFn: (item: E) => Promise<E2>): Promise<Result<V, E2>> {
+    async mapErrorAsync<E2>(
+        errFn: (item: E) => Promise<E2>
+    ): Promise<Result<V, E2>> {
         try {
             const newErr = await errFn(this._error);
             return new Err(newErr);
