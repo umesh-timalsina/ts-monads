@@ -1,4 +1,4 @@
-import {Maybe} from './lib/Maybe';
+import {Some, None} from './lib/Maybe';
 import {Ok, Err} from './lib/Result';
 
-export {Maybe, Ok, Err};
+export {Some, None, Ok, Err};
