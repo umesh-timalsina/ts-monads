@@ -8,9 +8,11 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts tests/*.spec.ts",
+    "test:unit": "ts-mocha -p tsconfig.json tests/**/*.spec.ts tests/*.spec.ts",
+    "test": "npm run typecheck && npm run test:unit",
     "prepublishOnly": "npm run build",
-    "build": "vite -c vite.config.js build"
+    "build": "vite -c vite.config.js build",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
