@@ -5,7 +5,7 @@ export interface Maybe<T> {
     isSome(): boolean;
     unwrap(): T;
     unwrapOr(defaultValue: T): T;
-    unwrapOrElse<T>(fn: () => T) : T;
+    unwrapOrElse(fn: () => T) : T;
     okOr<E>(err: E): Result<T, E>;
     okOrElse<E>(fn: () => E): Result<T, E>;
     map<E>(fn: (val: T) => E): Maybe<E>;
@@ -37,7 +37,7 @@ export class Some<T> implements Maybe<T> {
         return this.value;
     }
 
-     unwrapOrElse<T>(fn: () => T): T {
+     unwrapOrElse(fn: () => T): T {
         return this.value;
      }
 
@@ -123,7 +123,7 @@ export class None<T> implements Maybe<T> {
         return defaultValue;
     }
 
-    unwrapOrElse<T>(fn: () => T): T {
+    unwrapOrElse(fn: () => T): T {
         return fn();
     }
 }
