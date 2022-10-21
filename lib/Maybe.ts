@@ -6,8 +6,8 @@ export interface Maybe<T> {
     unwrap(): T;
     unwrapOr(defaultValue: T): T;
     unwrapOrElse(fn: () => T): T;
-    okOr<U>(err: U): Result<T, U>;
-    okOrElse<U>(fn: () => U): Result<T, U>;
+    okOr<E>(err: E): Result<T, E>;
+    okOrElse<E>(fn: () => E): Result<T, E>;
     map<U>(fn: (val: T) => U): Maybe<U>;
     mapAsync<U>(fn: (val: T) => Promise<U>): Promise<Maybe<U>>;
     mapOr<U>(defaultValue: U, fn: (val: T) => U): U;
@@ -44,11 +44,11 @@ export class Some<T> implements Maybe<T> {
         return this.value;
     }
 
-    okOr<U>(err: U): Ok<T> {
+    okOr<E>(err: E): Ok<T> {
         return new Ok(this.value);
     }
 
-    okOrElse<U>(fn: () => U): Ok<T> {
+    okOrElse<E>(fn: () => E): Ok<T> {
         return new Ok(this.value);
     }
 
@@ -84,11 +84,11 @@ export class Some<T> implements Maybe<T> {
 }
 
 export class None<T> implements Maybe<T> {
-    okOr<U>(err: U): Err<U> {
+    okOr<E>(err: E): Err<E> {
         return new Err(err);
     }
 
-    okOrElse<U>(fn: () => U): Err<U> {
+    okOrElse<E>(fn: () => E): Err<E> {
         return new Err(fn());
     }
 
