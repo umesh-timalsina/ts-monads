@@ -1,4 +1,4 @@
-import { Maybe } from './Maybe';
+import { Maybe, None, Some } from './Maybe';
 
 export interface Result<V, E> {
     map<V2>(fn: (item: V) => V2): Result<V2, E>;
@@ -44,7 +44,7 @@ export class Ok<V> implements Result<V> {
     }
 
     ok(): Maybe<V> {
-        return Maybe.some(this._value);
+        return new Some<V>(this.value);
     }
 
     unwrap(): V {
@@ -83,7 +83,7 @@ export class Err<E> implements Result<V, E> {
     }
 
     ok(): Maybe<V> {
-        return Maybe.none();
+        return new None<V>();
     }
 
     unwrap(): V {
