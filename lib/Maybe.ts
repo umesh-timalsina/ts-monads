@@ -6,21 +6,21 @@ export interface Maybe<T> {
     unwrap(): T;
     unwrapOr(defaultValue: T): T;
     unwrapOrElse(fn: () => T): T;
-    okOr<E>(err: E): Result<T, E>;
-    okOrElse<E>(fn: () => E): Result<T, E>;
-    map<E>(fn: (val: T) => E): Maybe<E>;
-    mapAsync<E>(fn: (val: T) => Promise<E>): Promise<Maybe<E>>;
-    mapOr<E>(defaultValue: E, fn: (val: T) => E): E;
-    mapAsyncOr<E>(defaultValue: E, fn: (val: T) => Promise<E>): Promise<E>;
-    mapOrElse<E>(defaultFn: () => E, mapFn: (val: T) => E): E;
-    mapAsyncOrElse<E>(
-        defaultFn: () => E,
-        mapFn: (val: T) => Promise<E>
-    ): Promise<E>;
+    okOr<U>(err: U): Result<T, U>;
+    okOrElse<U>(fn: () => U): Result<T, U>;
+    map<U>(fn: (val: T) => U): Maybe<U>;
+    mapAsync<U>(fn: (val: T) => Promise<U>): Promise<Maybe<U>>;
+    mapOr<U>(defaultValue: U, fn: (val: T) => U): U;
+    mapAsyncOr<U>(defaultValue: U, fn: (val: T) => Promise<U>): Promise<U>;
+    mapOrElse<U>(defaultFn: () => U, mapFn: (val: T) => U): U;
+    mapAsyncOrElse<U>(
+        defaultFn: () => U,
+        mapFn: (val: T) => Promise<U>
+    ): Promise<U>;
 }
 
 export class Some<T> implements Maybe<T> {
-    constructor(private value: T) {
+    constructor(private readonly value: T) {
         this.value = value;
     }
 
@@ -44,51 +44,51 @@ export class Some<T> implements Maybe<T> {
         return this.value;
     }
 
-    okOr<E>(err: E): Ok<T> {
+    okOr<U>(err: U): Ok<T> {
         return new Ok(this.value);
     }
 
-    okOrElse<E>(fn: () => E): Ok<T> {
+    okOrElse<U>(fn: () => U): Ok<T> {
         return new Ok(this.value);
     }
 
-    map<E>(fn: (val: T) => E): Maybe<E> {
+    map<U>(fn: (val: T) => U): Maybe<U> {
         return new Some(fn(this.value));
     }
 
-    async mapAsync<E>(fn: (val: T) => Promise<E>): Promise<Maybe<E>> {
+    async mapAsync<U>(fn: (val: T) => Promise<U>): Promise<Maybe<U>> {
         return new Some(await fn(this.value));
     }
 
-    mapOr<E>(defaultValue: E, fn: (val: T) => E): E {
+    mapOr<U>(defaultValue: U, fn: (val: T) => U): U {
         return fn(this.value);
     }
 
-    async mapAsyncOr<E>(
-        defaultValue: E,
-        fn: (val: T) => Promise<E>
-    ): Promise<E> {
+    async mapAsyncOr<U>(
+        defaultValue: U,
+        fn: (val: T) => Promise<U>
+    ): Promise<U> {
         return await fn(this.value);
     }
 
-    mapOrElse<E>(defaultFn: () => E, mapFn: (val: T) => E): E {
+    mapOrElse<U>(defaultFn: () => U, mapFn: (val: T) => U): U {
         return mapFn(this.value);
     }
 
-    async mapAsyncOrElse<E>(
-        defaultFn: () => E,
-        mapFn: (val: T) => Promise<E>
-    ): Promise<E> {
+    async mapAsyncOrElse<U>(
+        defaultFn: () => U,
+        mapFn: (val: T) => Promise<U>
+    ): Promise<U> {
         return await mapFn(this.value);
     }
 }
 
 export class None<T> implements Maybe<T> {
-    okOr<E>(err: E): Err<E> {
+    okOr<U>(err: U): Err<U> {
         return new Err(err);
     }
 
-    okOrElse<E>(fn: () => E): Err<E> {
+    okOrElse<U>(fn: () => U): Err<U> {
         return new Err(fn());
     }
 
@@ -100,33 +100,33 @@ export class None<T> implements Maybe<T> {
         return false;
     }
 
-    map<E>(fn: (val: T) => E): Maybe<E> {
-        return new None<E>();
+    map<U>(fn: (val: T) => U): Maybe<U> {
+        return new None<U>();
     }
 
-    async mapAsync<E>(fn: (val: T) => Promise<E>): Promise<Maybe<E>> {
-        return new None<E>();
+    async mapAsync<U>(fn: (val: T) => Promise<U>): Promise<Maybe<U>> {
+        return new None<U>();
     }
 
-    mapOr<E>(defaultValue: E, fn: (val: T) => E): E {
+    mapOr<U>(defaultValue: U, fn: (val: T) => U): U {
         return defaultValue;
     }
 
-    async mapAsyncOr<E>(
-        defaultValue: E,
-        fn: (val: T) => Promise<E>
-    ): Promise<E> {
+    async mapAsyncOr<U>(
+        defaultValue: U,
+        fn: (val: T) => Promise<U>
+    ): Promise<U> {
         return defaultValue;
     }
 
-    mapOrElse<E>(defaultFn: () => E, mapFn: (val: T) => E): E {
+    mapOrElse<U>(defaultFn: () => U, mapFn: (val: T) => U): U {
         return defaultFn();
     }
 
-    async mapAsyncOrElse<E>(
-        defaultFn: () => E,
-        mapFn: (val: T) => Promise<E>
-    ): Promise<E> {
+    async mapAsyncOrElse<U>(
+        defaultFn: () => U,
+        mapFn: (val: T) => Promise<U>
+    ): Promise<U> {
         return defaultFn();
     }
 
