@@ -9,7 +9,7 @@ export interface Result<V, E> {
     ok(): Maybe<V>;
 }
 
-export class Ok<V> implements Result<V> {
+export class Ok<V, E = never> implements Result<V, E> {
     _value: V;
 
     constructor(private value: V) {
@@ -25,7 +25,7 @@ export class Ok<V> implements Result<V> {
     }
 
     mapError<E2>(errFn: (err: E) => E2): Result<V, E2> {
-        return this;
+        return this as unknown as Result<V, E2>;
     }
 
     async mapAsync<V2>(fn: (item: V) => Promise<V2>): Promise<Result<V2, E>> {
@@ -40,7 +40,7 @@ export class Ok<V> implements Result<V> {
     async mapErrorAsync<E2>(
         errFn: (item: E) => Promise<E2>
     ): Promise<Result<V, E2>> {
-        return this;
+        return this as unknown as Result<V, E2>;
     }
 
     ok(): Maybe<V> {
@@ -52,7 +52,7 @@ export class Ok<V> implements Result<V> {
     }
 }
 
-export class Err<E> implements Result<V, E> {
+export class Err< V = never, E = any > implements Result<V, E> {
     _error: E;
 
     constructor(err: E) {
@@ -60,7 +60,7 @@ export class Err<E> implements Result<V, E> {
     }
 
     map<V2>(fn: (item: V) => V2): Result<V2, E> {
-        return this;
+        return this as unknown as Result<V2, E>;
     }
 
     mapError<E2>(errFn: (err: E) => E2): Result<V, E2> {
@@ -68,7 +68,7 @@ export class Err<E> implements Result<V, E> {
     }
 
     async mapAsync<V2>(fn: (item: V) => Promise<V2>): Promise<Result<V2, E>> {
-        return this;
+        return this as unknown as Result<V2, E>;
     }
 
     async mapErrorAsync<E2>(
@@ -78,12 +78,12 @@ export class Err<E> implements Result<V, E> {
             const newErr = await errFn(this._error);
             return new Err(newErr);
         } catch (err) {
-            return new Err(err as E);
+            return new Err(err as E) as unknown as Result<V, E2>;
         }
     }
 
     ok(): Maybe<V> {
-        return new None<V>();
+        return new None<V>() as Maybe<V>;
     }
 
     unwrap(): V {
