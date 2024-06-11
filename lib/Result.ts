@@ -52,7 +52,7 @@ export class Ok<V, E = never> implements Result<V, E> {
     }
 }
 
-export class Err< V = never, E = any > implements Result<V, E> {
+export class Err<V = never, E = any> implements Result<V, E> {
     _error: E;
 
     constructor(err: E) {
