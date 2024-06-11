@@ -84,11 +84,11 @@ export class Some<T> implements Maybe<T> {
 }
 
 export class None<T> implements Maybe<T> {
-    okOr<E>(err: E): Err<E> {
+    okOr<E>(err: E): Result<T, E> {
         return new Err(err);
     }
 
-    okOrElse<E>(fn: () => E): Err<E> {
+    okOrElse<E>(fn: () => E): Result<T, E> {
         return new Err(fn());
     }
 
@@ -101,11 +101,11 @@ export class None<T> implements Maybe<T> {
     }
 
     map<U>(fn: (val: T) => U): Maybe<U> {
-        return new None<U>();
+        return new None<U>() as Maybe<U>;
     }
 
     async mapAsync<U>(fn: (val: T) => Promise<U>): Promise<Maybe<U>> {
-        return new None<U>();
+        return new None<U>() as Maybe<U>;
     }
 
     mapOr<U>(defaultValue: U, fn: (val: T) => U): U {
