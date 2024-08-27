@@ -82,4 +82,26 @@ describe('Result', function () {
         );
         expect(() => errObj.unwrap()).not.toThrowError('some error');
     });
+
+    it('should unwrapOr return value on Ok', () => {
+        const result = new Ok('My String');
+        expect(result.unwrapOr('default')).toBe('My String');
+    });
+
+    it('should unwrapOr return default value on Err', () => {
+        const result = new Err(new Error('custom error message'));
+
+        expect(result.unwrapOr('default')).toBe('default');
+    });
+
+    it('should unwrapOrElse return value on Ok', () => {
+        const result = new Ok('My String');
+        expect(result.unwrapOrElse(() => 'default')).toBe('My String');
+    });
+
+    it('should unwrapOrElse return default value on Err', () => {
+        const result = new Err(new Error('custom error message'));
+
+        expect(result.unwrapOrElse((err) => err.message)).toBe('custom error message');
+    });
 });
