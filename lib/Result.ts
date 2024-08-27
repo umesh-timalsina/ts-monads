@@ -7,6 +7,8 @@ export interface Result<V, E> {
     mapErrorAsync<E2>(errFn: (item: E) => Promise<E2>): Promise<Result<V, E2>>;
     unwrap(): V;
     ok(): Maybe<V>;
+    unwrapOr(defaultValue: V): V;
+    unwrapOrElse(fn: (err: E) => V): V;
 }
 
 export class Ok<V, E = never> implements Result<V, E> {
@@ -50,6 +52,14 @@ export class Ok<V, E = never> implements Result<V, E> {
     unwrap(): V {
         return this._value;
     }
+
+    unwrapOr(defaultValue: V): V {
+        return this._value;
+    }
+
+    unwrapOrElse(fn: (err: E) => V): V {
+        return this._value;
+    }
 }
 
 export class Err<V = never, E = any> implements Result<V, E> {
@@ -88,5 +98,13 @@ export class Err<V = never, E = any> implements Result<V, E> {
 
     unwrap(): V {
         throw this._error;
+    }
+
+    unwrapOr(defaultValue: V): V {
+        return defaultValue;
+    }
+
+    unwrapOrElse(fn: (err: E) => V): V {
+        return fn(this._error);
     }
 }
