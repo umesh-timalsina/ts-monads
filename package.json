@@ -1,5 +1,5 @@
 {
-  "name": "ts-monads",
+  "name": "@utimalsina/ts-monads",
   "version": "1.0.1",
   "description": "Reusable monads in typescript",
   "main": "index.js",
