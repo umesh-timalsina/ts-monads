@@ -12,17 +12,17 @@ on:
 
 jobs:
   test:
-    name: "Test (node 14)"
+    name: "Test (node 22)"
     runs-on: "ubuntu-latest"
 
     steps:
       - name: "Checkout Branch"
         uses: actions/checkout@v3
 
-      - name: "Use Node.js 14"
-        uses: actions/setup-node@v3
+      - name: "Use Node.js 22"
+        uses: actions/setup-node@v4
         with:
-          node-version: "14.x"
+          node-version: "22.x"
 
       - name: "Install Dependencies"
         run: npm install -g npm && npm install

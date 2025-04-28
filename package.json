@@ -1,7 +1,7 @@
 {
   "name": "ts-monads",
   "version": "1.0.0",
-  "description": "\"Reusable monads in typescript\"",
+  "description": "Reusable monads in typescript",
   "main": "index.js",
   "directories": {
     "lib": "lib",
